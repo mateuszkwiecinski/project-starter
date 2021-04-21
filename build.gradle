@@ -17,6 +17,14 @@ allprojects {
             useIR = true
         }
     }
+    tasks.withType(JacocoReport).configureEach {
+        logger.quiet("executionData for project=$project.path task=$it.path is ${it.executionData.toList()}")
+    }
+    pluginManager.withPlugin("jacoco") {
+        tasks.withType(Test).configureEach {
+            logger.quiet("destinationFile for project=$project.path task=$it.path is \${projectDir}/${project.rootDir.relativePath(jacoco.destinationFile)}")
+        }
+    }
     configurations.configureEach {
         resolutionStrategy.eachDependency {
             if (requested.group == 'org.jetbrains.kotlin' && requested.name.startsWith("kotlin")) {

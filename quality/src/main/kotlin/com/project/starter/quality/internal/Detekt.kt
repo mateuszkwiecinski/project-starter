@@ -21,7 +21,6 @@ internal fun Project.configureDetekt() {
         onMultiplatform {
             sourceSets.configureEach {
                 detekt.input.from(it.kotlin.srcDirs)
-                // detekt.input.from(it.kotlin.srcDirTrees)
             }
         }
 
@@ -35,10 +34,5 @@ internal fun Project.configureDetekt() {
     }
     tasks.withType(Detekt::class.java).configureEach {
         it.jvmTarget = rootConfig.javaVersion.toString()
-    }
-
-    // https://github.com/detekt/detekt/issues/3712
-    configurations.named("detekt") {
-        it.resolutionStrategy.force("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3")
     }
 }

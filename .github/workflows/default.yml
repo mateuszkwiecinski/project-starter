@@ -75,8 +75,9 @@ jobs:
   build-all-sample-android-projects:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        gradle: [ 6.8.3, current, rc ]
+        gradle: [ '7.0', current, rc ]
         task: [ build, projectTest, projectLint, projectCodeStyle, projectCoverage, issueLinksReport ]
     name: (Android) Gradle version ${{ matrix.gradle }}, task ${{ matrix.task }}
     steps:
@@ -102,12 +103,19 @@ jobs:
           build-root-directory: sample/android
           gradle-version: ${{ matrix.gradle }}
           arguments: ${{ matrix.task }} -PuseMavenLocal
+          
+      - uses: eskatos/gradle-command-action@v1
+        with:
+          build-root-directory: sample/android
+          gradle-version: ${{ matrix.gradle }}
+          arguments: ${{ matrix.task }} -PuseMavenLocal --configuration-cache
 
   build-all-sample-kotlin-projects:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        gradle: [ 6.8.3, current, rc ]
+        gradle: [ '7.0', current, rc ]
         task: [ build, projectTest, projectCodeStyle, projectCoverage, issueLinksReport ]
     name: (Kotlin) Gradle ${{ matrix.gradle }}, task ${{ matrix.task }}
     steps:
@@ -133,3 +141,9 @@ jobs:
           build-root-directory: sample/kotlin
           gradle-version: ${{ matrix.gradle }}
           arguments: ${{ matrix.task }} -PuseMavenLocal
+
+      - uses: eskatos/gradle-command-action@v1
+        with:
+          build-root-directory: sample/kotlin
+          gradle-version: ${{ matrix.gradle }}
+          arguments: ${{ matrix.task }} -PuseMavenLocal --configuration-cache
